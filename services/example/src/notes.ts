@@ -29,4 +29,14 @@ router.put("/:noteId", async (req, res) => {
 	res.json(result);
 });
 
+router.delete("/:noteId", async (req, res) => {
+	const prisma: PrismaClient = req.app.locals.prisma;
+	const result = await prisma.notes.delete(
+		{
+			where: { id: parseInt(req.params.noteId, 10) }
+		}
+	);
+	res.json(result);
+});
+
 export default router;
