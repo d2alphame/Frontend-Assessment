@@ -5,9 +5,9 @@ const router = Router();
 
 router.post("/create", async (req, res) => {
 	const prisma: PrismaClient = req.app.locals.prisma;
-	const { description, title } = req.body;
+	const { description, title, owner} = req.body;
 	const result = await prisma.notes.create({
-		data: { description, title },
+		data: { description, title, owner },
 	});
 	res.status(200).json(result);
 });
