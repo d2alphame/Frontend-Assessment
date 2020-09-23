@@ -1,5 +1,39 @@
-import Head from 'next/head'
+// import { NotesDistinctFieldEnum, prismaVersion } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
+import Head from 'next/head'
+export default function Home({ data }) {
+  return (
+    <div className="container">
+      <Head>
+        <title>Tuteria Frontend Assessment</title>
+      </Head>
+      <main>
+        <h1 className="title">Anonymous Notes</h1>
+        <ul>
+          {
+            data.map(note => (
+              <li key={note.id}> {note.title}</li>
+            ))
+          }
+        </ul>
+      </main>
+    </div>
+  );
+}
+
+export async function getServerSideProps({ req }) {
+  //const prisma : PrismaClient = req.app.locals.prisma;
+  const prisma : PrismaClient = new PrismaClient();
+  const data = await prisma.notes.findMany({
+    where: {
+      owner: null
+    },
+  })
+  return { props: { data } }
+}
+
+/*
 export default function Home() {
   return (
     <div className="container">
@@ -207,3 +241,4 @@ export default function Home() {
     </div>
   )
 }
+*/
