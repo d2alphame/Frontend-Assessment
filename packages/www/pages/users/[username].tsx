@@ -2,17 +2,17 @@
 import { PrismaClient } from '@prisma/client';
 import Head from 'next/head'
 
-export default function Home({ data }) {
+export default function Notes(data) {
   return (
     <div className="container">
       <Head>
         <title>Tuteria Frontend Assessment</title>
       </Head>
       <main>
-        <h1 className="title">Anonymous Notes</h1>
+        <h1 className="title">{data.user}'s Notes</h1>
         <ul>
           {
-            data.map(note => (
+            data.notes.map(note => (
               <li key={note.id}> {note.title}</li>
             ))
           }
@@ -22,14 +22,18 @@ export default function Home({ data }) {
   );
 }
 
-export async function getServerSideProps({ req }) {
-  const prisma : PrismaClient = new PrismaClient();
-  const data = await prisma.notes.findMany({
+
+export async function getServerSideProps({ params }) {
+	const prisma : PrismaClient = new PrismaClient();
+
+	const data = await prisma.notes.findMany({
     where: {
-      owner: null
+      owner: params.username
     },
-  })
-  return { props: { data } }
+	})
+	
+
+  return { props: { notes: data, user: params.username } }
 }
 
 /*
